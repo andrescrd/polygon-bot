@@ -1,0 +1,16 @@
+node_modules/
+build/
+dist/
+.next/
+.out/
+static/
+public/
+coverage/
+__coverage__/
+__reports__/
+/*rc.js
+plopfile.js
+tsconfig.json
+.eslintrc.json
+package.json
+yarn.lock
