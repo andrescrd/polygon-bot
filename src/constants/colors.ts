@@ -1,4 +1,4 @@
-export const colors = {
+export const COLORS = {
   Reset: '\x1b[0m',
   Bright: '\x1b[1m',
   Dim: '\x1b[2m',

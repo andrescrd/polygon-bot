@@ -1,11 +1,9 @@
 import { ethers } from 'ethers';
 
-import { PriceLookup } from './interfaces/PriceLookup';
+import QuoteManager from './managers/quoteManager';
 import UniswapV2 from './models/uniswapV2';
 import UniswapV3 from './models/uniswapV3';
 import { IUniswapV2PairABI, IUniswapV3PoolABI } from './utils/abis';
-import { colors } from './constants/colors';
-import { poolToDex, poolToRouter } from './utils/poolTo';
 
 require('dotenv').config();
 
@@ -14,79 +12,6 @@ const provider = new ethers.providers.JsonRpcProvider(process.env.JSON_RPC_PROVI
 
 let runCounter = 0;
 let oppCounter = 0;
-
-const runMath = async (buyAmount: number, priceList: PriceLookup[]) => {
-  // Sort the prices
-  priceList.sort((a, b) => b.token0_1 - a.token0_1);
-
-  const tmpList = [];
-  for (const [_, value] of Object.entries(priceList)) {
-    tmpList.push({
-      Exchange: await poolToDex(value.pool),
-      'In / Out': value.token0_1,
-      'Out / In': value.token1_0,
-      'PoolFee (%)': value.poolFee / 10000
-    });
-  }
-  console.table(tmpList);
-
-  // Identify where to buy and sell
-  const buyAt = priceList[0];
-  const sellAt = priceList[priceList.length - 1];
-
-  // ========================
-  // xToken = TokenIn for BUY
-  // yToken = TokenOut for BUY
-  // ========================
-  console.log(`${colors.FgBlue}============ Swaps ============`);
-  console.log(
-    `${colors.FgCyan}First Swap:\n - xToken: ${buyAmount} = yToken: ${buyAmount * buyAt.token0_1}`
-  );
-  console.log(
-    `${colors.FgCyan}Second Swap:\n - yToken: ${buyAmount * buyAt.token0_1} = xToken: ${
-      buyAmount * buyAt.token0_1 * sellAt.token1_0
-    }`
-  );
-
-  console.log(`${colors.FgBlue}============ Profit ============`);
-  let netProfit = buyAmount * buyAt.token0_1 * sellAt.token1_0 - buyAmount;
-
-  console.log(`${colors.FgRed}After Swaps: ${netProfit}`);
-
-  // Flashloan premium
-  netProfit -= buyAmount * 0.0009;
-  console.log(`${colors.FgRed}After FL Premium: ${netProfit}`);
-
-  // Padding
-  if (parseFloat(process.env.PADDING as string) > 0) {
-    netProfit -= netProfit * parseFloat(process.env.PADDING as string);
-    console.log(`After: Padding: ${netProfit}`);
-  }
-
-  console.log(
-    `${colors.FgBlue}========================\n${colors.FgGreen}Total: ${netProfit}${colors.Reset}\n`
-  );
-
-  // Return null if there is no profit
-  if (netProfit <= 0) return null;
-
-  oppCounter++;
-
-  return {
-    buy: {
-      router: await poolToRouter(buyAt.pool),
-      tokenIn: '',
-      poolFee: buyAt.poolFee,
-      isV3: buyAt.isV3
-    },
-    sell: {
-      router: await poolToRouter(sellAt.pool),
-      tokenIn: '',
-      poolFee: sellAt.poolFee,
-      isV3: sellAt.isV3
-    }
-  };
-};
 
 function poolContract(adr: string, abi: any) {
   return new ethers.Contract(adr, abi, provider);
@@ -121,7 +46,9 @@ const main = async () => {
     quickSwapData.token0_1 *= 10 ** 12;
     quickSwapData.token1_0 /= 10 ** 12;
 
-    const dat: any = await runMath(600, [uniswapV3PriceData, quickSwapData]);
+    const dat = await QuoteManager.execute(600, [uniswapV3PriceData, quickSwapData]);
+
+    if (dat) oppCounter++;
   }
 
   // ============ USDC/USDT ============
@@ -140,7 +67,9 @@ const main = async () => {
       3000
     );
 
-    const dat: any = await runMath(600, [uniswapV3PriceData, quickSwapData]);
+    const dat: any = await QuoteManager.execute(600, [uniswapV3PriceData, quickSwapData]);
+
+    if (dat) oppCounter++;
   }
 
   // // ============ wMATIC/USDT ============
@@ -153,7 +82,7 @@ const main = async () => {
   //   quickSwapData.token0_1 *= 10 ** 12;
   //   quickSwapData.token1_0 /= 10 ** 12;
 
-  //   const dat: any = await runMath(600, [
+  //   const dat: any = await execute(600, [
   //     uniswapV3PriceData,
   //     quickSwapData
   //   ])
@@ -162,7 +91,7 @@ const main = async () => {
   // // ============ wMATIC/MANA ============
   // {
   //   console.log('wMATIC/MANA');
-  //   const dat: any = await runMath(600, [
+  //   const dat: any = await execute(600, [
   //     // https://info.uniswap.org/#/polygon/pools/0x56845fd95C766eCB0ab450fE2D105a19440a6E35
   //     await uniswapV3Price(poolContract('0x56845fd95C766eCB0ab450fE2D105a19440a6E35', IUniswapV3PoolABI), 18, 18, 3000),
   //     // https://info.quickswap.exchange/#/pair/0x6b0Ce31eAD9b14c2281D80A5DDE903AB0855313A
@@ -179,7 +108,7 @@ const main = async () => {
   // // ============ wETH/MANA ============
   // {
   //   console.log('wETH/MANA');
-  //   const dat: any = await runMath(0.5, [
+  //   const dat: any = await execute(0.5, [
   //     // https://info.uniswap.org/#/polygon/pools/0x28bdd3749bdea624a726ca153de1cb673f459b9d
   //     await uniswapV3Price(poolContract('0x28bdd3749bdea624a726ca153de1cb673f459b9d', IUniswapV3PoolABI), 18, 18, 3000),
   //     // https://info.quickswap.exchange/#/pair/0x814b6c10bf752bbbea7bd68e5e65dc28b4f45982
@@ -196,7 +125,7 @@ const main = async () => {
   // // ============ wMATIC/AVAX ============
   // {
   //   console.log('wMATIC/AVAX');
-  //   const dat: any = await runMath(600, [
+  //   const dat: any = await execute(600, [
   //     // https://info.uniswap.org/#/polygon/pools/0xfa3f210cbad19c8b860a256d67a400d616a87c2a
   //     await uniswapV3Price(poolContract('0xfa3f210cbad19c8b860a256d67a400d616a87c2a', IUniswapV3PoolABI), 18, 18, 3000),
   //     // https://info.quickswap.exchange/#/pair/0xeb477ae74774b697b5d515ef8ca09e24fee413b5
@@ -223,7 +152,7 @@ const main = async () => {
   //   firebirdData.token0_1 /= 10 ** 12;
   //   firebirdData.token1_0 *= 10 ** 12;
 
-  //   const dat: any = await runMath(1000, [
+  //   const dat: any = await execute(1000, [
   //     // https://info.uniswap.org/#/polygon/pools/0x45dda9cb7c25131df268515131f647d726f50608
   //     await uniswapV3Price(poolContract('0x45dda9cb7c25131df268515131f647d726f50608', IUniswapV3PoolABI), 6, 18, 500),
   //     quickSwapData,
@@ -250,7 +179,7 @@ const main = async () => {
   //   firebirdData.token0_1 /= 10 ** 10;
   //   firebirdData.token1_0 *= 10 ** 10;
 
-  //   const dat: any = await runMath(0.1, [
+  //   const dat: any = await execute(0.1, [
   //     // https://info.uniswap.org/#/polygon/pools/0x50eaedb835021e4a108b7290636d62e9765cc6d7
   //     await uniswapV3Price(poolContract('0x50eaedb835021e4a108b7290636d62e9765cc6d7', IUniswapV3PoolABI), 8, 18, 500),
   //     quickSwapData,
