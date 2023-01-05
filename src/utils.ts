@@ -6,7 +6,7 @@ import { Immutables, State } from './interfaces';
 import { abi } from '@uniswap/v3-core/artifacts/contracts/interfaces/IUniswapV3Pool.sol/IUniswapV3Pool.json';
 
 // Get the prices of a uniswapv3 pair contract
-export async function uniswapV3Price(cntr: ethers.Contract, token0Decimals: number, token1Decimals: number, poolFee: number) {
+export async function uniswapV3Price(cntr: ethers.Contract, token0Decimals: number, token1Decimals: number, poolFee: number, chainId = 137) {
     // ============ Immutables ============
     const [factory, token0, token1, fee, tickSpacing, maxLiquidityPerTick] = await Promise.all([
         cntr.factory(), cntr.token0(), cntr.token1(), cntr.fee(), cntr.tickSpacing(), cntr.maxLiquidityPerTick()
@@ -28,8 +28,8 @@ export async function uniswapV3Price(cntr: ethers.Contract, token0Decimals: numb
 
     // ============ Price ============
     const pool = new Pool(
-        new Token(3, immutables.token0, token0Decimals),
-        new Token(3, immutables.token1, token1Decimals),
+        new Token(chainId, immutables.token0, token0Decimals),
+        new Token(chainId, immutables.token1, token1Decimals),
         immutables.fee,
         state.sqrtPriceX96.toString(),
         state.liquidity.toString(),
@@ -50,7 +50,7 @@ export async function uniswapV3Price(cntr: ethers.Contract, token0Decimals: numb
 };
 
 // Get the prices of a quickswap pair
-export async function uniswapV2Price(cntr: ethers.Contract, poolFee: number) {
+export async function uniswapV2Price(cntr: ethers.Contract, poolFee: number, chainId = 137) {
     const reserves = await cntr.functions.getReserves();
 
     return {
