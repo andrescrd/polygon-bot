@@ -51,12 +51,12 @@ async function getQuote(
   return {
     isV3: true,
     pool: contract,
-    // token0_1: parseFloat(pool.token0Price.quote(token0Amount).toExact()),
-    // token1_0: parseFloat(pool.token1Price.quote(token1Amount).toExact()),
-    token0_1:
-      parseFloat(pool.token0Price.quote(token0Amount).toExact()) * ((100 - poolFee / 10000) / 100),
-    token1_0:
-      parseFloat(pool.token1Price.quote(token1Amount).toExact()) * ((100 - poolFee / 10000) / 100),
+    token0_1: parseFloat(pool.token0Price.quote(token0Amount).toExact()),
+    token1_0: parseFloat(pool.token1Price.quote(token1Amount).toExact()),
+    // token0_1:
+    //   parseFloat(pool.token0Price.quote(token0Amount).toExact()) * ((100 - poolFee / 10000) / 100),
+    // token1_0:
+    //   parseFloat(pool.token1Price.quote(token1Amount).toExact()) * ((100 - poolFee / 10000) / 100),
     poolFee
   };
 }

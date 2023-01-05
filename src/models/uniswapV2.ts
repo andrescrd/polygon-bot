@@ -7,10 +7,10 @@ async function getQuote(contract: ethers.Contract, poolFee: number, chainId = 13
   return {
     isV3: false,
     pool: contract,
-    // token0_1: reserves._reserve1 / reserves._reserve0,
-    // token1_0: reserves._reserve0 / reserves._reserve1,
-    token0_1: (reserves._reserve1 / reserves._reserve0) * ((100 - poolFee / 10000) / 100),
-    token1_0: (reserves._reserve0 / reserves._reserve1) * ((100 - poolFee / 10000) / 100),
+    token0_1: reserves._reserve1 / reserves._reserve0,
+    token1_0: reserves._reserve0 / reserves._reserve1,
+    // token0_1: (reserves._reserve1 / reserves._reserve0) * ((100 - poolFee / 10000) / 100),
+    // token1_0: (reserves._reserve0 / reserves._reserve1) * ((100 - poolFee / 10000) / 100),
     poolFee
   };
 }

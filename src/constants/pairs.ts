@@ -15,7 +15,13 @@ export const PAIRS: { [pair: string]: IPair } = {
     Quickswap: {
       // https://info.quickswap.exchange/#/pair/0x6e7a5fafcec6bb1e78bae2a1f0b612012bf14827
       PoolContract: '0x6e7a5fafcec6bb1e78bae2a1f0b612012bf14827',
-      PoolFee: 3000
+      PoolFee: 3000,
+      FixDecimal: ({ token0_1, token1_0 }) => {
+        return {
+          token0_1: token0_1 * 10 ** 12,
+          token1_0: token1_0 / 10 ** 12
+        };
+      }
     }
   },
   USDC_USDT: {

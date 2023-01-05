@@ -30,10 +30,24 @@ const QuoteManager = (provider: any) => {
       pair.Quickswap.PoolFee
     );
 
-    return { quickSwapData, uniswapV3PriceData };
+    if (pair.Quickswap.FixDecimal) {
+      const { token0_1, token1_0 } = pair.Quickswap.FixDecimal(quickSwapData);
+      quickSwapData.token0_1 = token0_1;
+      quickSwapData.token1_0 = token1_0;
+    }
+
+    if (pair.Uniswap.FixDecimal) {
+      const { token0_1, token1_0 } = pair.Uniswap.FixDecimal(uniswapV3PriceData);
+      uniswapV3PriceData.token0_1 = token0_1;
+      uniswapV3PriceData.token1_0 = token1_0;
+    }
+
+    return [quickSwapData, uniswapV3PriceData];
   }
 
-  async function execute(buyAmount: number, priceList: PriceLookup[]) {
+  async function execute(buyAmount: number, pair: IPair) {
+    const priceList = await getQuotes(pair);
+
     // Sort prices
     priceList.sort((a, b) => b.token0_1 - a.token0_1);
 
@@ -65,7 +79,6 @@ const QuoteManager = (provider: any) => {
   }
 
   return {
-    getQuotes,
     execute
   };
 };
