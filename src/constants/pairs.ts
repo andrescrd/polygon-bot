@@ -29,14 +29,35 @@ export const PAIRS: { [pair: string]: IPair } = {
     Uniswap: {
       // https://info.uniswap.org/#/polygon/pools/0x3f5228d0e7d75467366be7de2c31d0d098ba2c23
       PoolContract: '0x3f5228d0e7d75467366be7de2c31d0d098ba2c23',
-      DecimalToken0: TOKENS.USDT.Decimals,
-      DecimalToken1: TOKENS.USDC.Decimals,
+      DecimalToken0: TOKENS.USDC.Decimals,
+      DecimalToken1: TOKENS.USDT.Decimals,
       PoolFee: 3000
     },
     Quickswap: {
       // https://info.quickswap.exchange/#/pair/0x2cf7252e74036d1da831d11089d326296e64a728
       PoolContract: '0x2cf7252e74036d1da831d11089d326296e64a728',
       PoolFee: 3000
+    }
+  },
+  wMATIC_USDT: {
+    Name: 'wMATIC/USDT',
+    Uniswap: {
+      // https://info.uniswap.org/#/polygon/pools/0x781067ef296e5c4a4203f81c593274824b7c185d
+      PoolContract: '0x781067ef296e5c4a4203f81c593274824b7c185d',
+      DecimalToken0: TOKENS.MATIC.Decimals,
+      DecimalToken1: TOKENS.USDT.Decimals,
+      PoolFee: 3000
+    },
+    Quickswap: {
+      // https://info.quickswap.exchange/#/pair/0x604229c960e5cacf2aaeac8be68ac07ba9df81c3
+      PoolContract: '0x604229c960e5cacf2aaeac8be68ac07ba9df81c3',
+      PoolFee: 3000,
+      FixDecimal: ({ token0_1, token1_0 }) => {
+        return {
+          token0_1: token0_1 * 10 ** 12,
+          token1_0: token1_0 / 10 ** 12
+        }
+      }
     }
   }
 };

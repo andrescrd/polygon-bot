@@ -1,19 +1,5 @@
 
-  // // ============ wMATIC/USDT ============
-  // {
-  //   console.log('MATIC/USDT')
-  //   // https://info.uniswap.org/#/polygon/pools/0x781067ef296e5c4a4203f81c593274824b7c185d
-  //   const uniswapV3PriceData = await uniswapV3Price(poolContract('0x781067ef296e5c4a4203f81c593274824b7c185d', IUniswapV3PoolABI), 18, 6, 3000)
-  //   // https://info.quickswap.exchange/#/pair/0x604229c960e5cacf2aaeac8be68ac07ba9df81c3
-  //   const quickSwapData = await uniswapV2Price(poolContract('0x604229c960e5cacf2aaeac8be68ac07ba9df81c3', IUniswapV2PairABI), 3000)
-  //   quickSwapData.token0_1 *= 10 ** 12;
-  //   quickSwapData.token1_0 /= 10 ** 12;
 
-  //   const dat: any = await execute(600, [
-  //     uniswapV3PriceData,
-  //     quickSwapData
-  //   ])
-  // }
 
   // // ============ wMATIC/MANA ============
   // {
