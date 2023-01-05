@@ -6,7 +6,7 @@ import { Immutables } from '../interfaces/Immutables';
 import { State } from '../interfaces/State';
 
 // Get the prices of a uniswapv3 pair contract
-async function getPrice(
+async function getQuote(
   contract: ethers.Contract,
   token0Decimals: number,
   token1Decimals: number,
@@ -62,7 +62,7 @@ async function getPrice(
 }
 
 const UniswapV3 = {
-  getPrice
+  getQuote
 };
 
 export default UniswapV3;

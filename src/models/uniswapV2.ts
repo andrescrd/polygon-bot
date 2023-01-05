@@ -1,7 +1,7 @@
 import { ethers } from 'ethers';
 
 // Get the prices of a quickswap pair
-async function getPrice(contract: ethers.Contract, poolFee: number, chainId = 137) {
+async function getQuote(contract: ethers.Contract, poolFee: number, chainId = 137) {
   const reserves = await contract.functions.getReserves();
 
   return {
@@ -16,7 +16,7 @@ async function getPrice(contract: ethers.Contract, poolFee: number, chainId = 13
 }
 
 const UniswapV2 = {
-  getPrice
+  getQuote
 };
 
 export default UniswapV2;
