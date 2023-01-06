@@ -1,10 +1,11 @@
 /* eslint-disable camelcase */
+import { PairEnum } from '../enum/pairEnum';
 import { IPair } from '../interfaces/Pair';
 
 import { TOKENS } from './tokens';
 
 export const PAIRS: { [pair: string]: IPair } = {
-  MATIC_USDC: {
+  [PairEnum.MATIC_USDC]: {
     Name: 'MATIC/USDC',
     Uniswap: {
       // https://info.uniswap.org/#/polygon/pools/0xa374094527e1673a86de625aa59517c5de346d32
@@ -25,7 +26,7 @@ export const PAIRS: { [pair: string]: IPair } = {
       }
     }
   },
-  USDC_USDT: {
+  [PairEnum.USDC_USDT]: {
     Name: 'USDC/USDT',
     Uniswap: {
       // https://info.uniswap.org/#/polygon/pools/0x3f5228d0e7d75467366be7de2c31d0d098ba2c23
@@ -40,7 +41,7 @@ export const PAIRS: { [pair: string]: IPair } = {
       PoolFee: 3000
     }
   },
-  wMATIC_USDT: {
+  [PairEnum.wMATIC_USDT]: {
     Name: 'wMATIC/USDT',
     Uniswap: {
       // https://info.uniswap.org/#/polygon/pools/0x781067ef296e5c4a4203f81c593274824b7c185d
