@@ -20,7 +20,7 @@ const main = async () => {
   //   const signer = new ethers.Wallet(process.env.PRIVATE_KEY as string, provider);
   //   const cntr = new ethers.Contract(process.env.CONTRACT_ADDRESS as string, CntrAbi, signer);
 
-  for (const [pairName,] of Object.entries(PAIRS)) {
+  for (const [pairName] of Object.entries(PAIRS)) {
     const dat = await quoteManager.execute(500, PAIRS[pairName]);
     if (dat) oppCounter++;
   }

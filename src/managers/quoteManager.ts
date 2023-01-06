@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { ethers } from 'ethers';
 
 import { COLORS } from '../constants/colors';

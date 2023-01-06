@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { IPair } from '../interfaces/Pair';
 
 import { TOKENS } from './tokens';
@@ -56,7 +57,7 @@ export const PAIRS: { [pair: string]: IPair } = {
         return {
           token0_1: token0_1 * 10 ** 12,
           token1_0: token1_0 / 10 ** 12
-        }
+        };
       }
     }
   }
