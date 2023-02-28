@@ -56,12 +56,15 @@ const QuoteManager = (provider: any) => {
     const buyAt = priceList[0];
     const sellAt = priceList[priceList.length - 1];
 
-    await printTable(priceList);
-    printSwapInfo(buyAmount, buyAt, sellAt);
-    const netProfit = printProfit(buyAmount, buyAt, sellAt);
+    // const netProfit = printProfit(buyAmount, buyAt, sellAt);
+    const netProfit = getProfit(buyAmount, buyAt, sellAt);
 
     // Return null if there is no profit
     if (netProfit <= 0) return null;
+
+    await printTable(priceList);
+    printSwapInfo(buyAmount, buyAt, sellAt);
+    printProfit(buyAmount, buyAt, sellAt);
 
     return {
       buy: {
@@ -103,6 +106,18 @@ function printProfit(buyAmount: number, buyAt: PriceLookup, sellAt: PriceLookup)
   console.log(
     `${COLORS.FgBlue}========================\n${COLORS.FgGreen}Total: ${netProfit}${COLORS.Reset}\n`
   );
+}
+
+function getProfit(buyAmount: number, buyAt: PriceLookup, sellAt: PriceLookup) {
+  let netProfit = buyAmount * buyAt.token0_1 * sellAt.token1_0 - buyAmount;
+
+  // Flashloan premium
+  netProfit -= buyAmount * 0.0009;
+
+  // Padding
+  if (parseFloat(process.env.PADDING as string) > 0) {
+    netProfit -= netProfit * parseFloat(process.env.PADDING as string);
+  }
 
   return netProfit;
 }
