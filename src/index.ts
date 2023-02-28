@@ -21,8 +21,14 @@ const main = async () => {
   //   const cntr = new ethers.Contract(process.env.CONTRACT_ADDRESS as string, CntrAbi, signer);
 
   for (const [pairName] of Object.entries(PAIRS)) {
-    const dat = await quoteManager.execute(10, PAIRS[pairName]);
-    if (dat) oppCounter++;
+    try {
+      if (PAIRS[pairName].Disabled) continue;
+
+      const dat = await quoteManager.execute(PAIRS[pairName].Amount, PAIRS[pairName]);
+      if (dat) oppCounter++;
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   runCounter++;
