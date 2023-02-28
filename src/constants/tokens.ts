@@ -14,5 +14,21 @@ export const TOKENS = {
   BUSD: {
     Symbol: 'BUSD',
     Decimals: 6
+  },
+  BTC: {
+    Symbol: 'BTC',
+    Decimals: 8
+  },
+  ETH: {
+    Symbol: 'ETH',
+    Decimals: 18
+  },
+  BCH: {
+    Symbol: 'BCH',
+    Decimals: 18
+  },
+  LTC: {
+    Symbol: 'LTC',
+    Decimals: 6
   }
 };

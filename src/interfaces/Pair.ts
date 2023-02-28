@@ -7,6 +7,8 @@ type FixDecimalPair = (data: Pick<PriceLookup, 'token0_1' | 'token1_0'>) => {
 
 export interface IPair {
   Name: string;
+  Amount: number;
+  Disabled?: boolean;
   Uniswap: {
     PoolContract: string;
     DecimalToken0: number;
