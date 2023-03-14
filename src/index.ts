@@ -21,21 +21,24 @@ const main = async () => {
   //   const signer = new ethers.Wallet(process.env.PRIVATE_KEY as string, provider);
   //   const cntr = new ethers.Contract(process.env.CONTRACT_ADDRESS as string, CntrAbi, signer);
 
-  for (const [pairName] of Object.entries(PAIRS)) {
-    try {
-      if (PAIRS[pairName].Disabled) continue;
+  const promiseResult = Object.entries(PAIRS)
+    .map(([pairName]) => {
+      try {
+        if (!PAIRS[pairName].Disabled) {
+          return quoteManager.execute(PAIRS[pairName].Amount, PAIRS[pairName]);
+        }
 
-      // await audic.play();
-
-      const dat = await quoteManager.execute(PAIRS[pairName].Amount, PAIRS[pairName]);
-      if (dat) {
-        list.push(dat);
-        oppCounter++;
+        return null;
+      } catch (error) {
+        console.log(error);
+        return null;
       }
-    } catch (error) {
-      console.log(error);
-    }
-  }
+    })
+    .filter((value) => !!value);
+
+  const result = (await Promise.all(promiseResult)).filter((value) => !!value).length;
+  oppCounter += result;
+  list.push(result);
 
   runCounter++;
   console.log(`(${runCounter}/${oppCounter}) Finished. Awaiting next call.`);
