@@ -69,7 +69,6 @@ export const PAIRS: { [pair: string]: IPair } = {
     }
   },
   [PairEnum.BTC_ETH]: {
-    // Disabled: true,
     Name: 'BTC/ETH',
     Amount: 0.1,
     Uniswap: {
@@ -91,7 +90,7 @@ export const PAIRS: { [pair: string]: IPair } = {
       }
     }
   },
-  [PairEnum.BTC_ETH]: {
+  [PairEnum.USDC_ETH]: {
     // Disabled: true,
     Name: 'USDC/ETH',
     Amount: 1000,
