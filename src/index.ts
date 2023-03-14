@@ -36,8 +36,8 @@ const main = async () => {
     })
     .filter((value) => !!value);
 
-  const result = (await Promise.all(promiseResult)).filter((value) => !!value).length;
-  oppCounter += result;
+  const result = (await Promise.all(promiseResult)).filter((value) => !!value);
+  oppCounter += result.length;
   list.push(result);
 
   runCounter++;
