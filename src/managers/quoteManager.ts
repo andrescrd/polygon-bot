@@ -7,6 +7,7 @@ import { PriceLookup } from '../interfaces/PriceLookup';
 import UniswapV2 from '../models/uniswapV2';
 import UniswapV3 from '../models/uniswapV3';
 import { IUniswapV2PairABI, IUniswapV3PoolABI } from '../utils/abis';
+import logger from '../utils/logger';
 import { poolToDex, poolToRouter } from '../utils/poolTo';
 
 const QuoteManager = (provider: any) => {
@@ -17,7 +18,8 @@ const QuoteManager = (provider: any) => {
   }
 
   async function getQuotes(pair: IPair) {
-    console.log(pair.Name);
+    // console.log(pair.Name);
+    logger.log(pair.Name);
 
     const uniswapV3PriceData = await UniswapV3.getQuote(
       poolContract(pair.Uniswap.PoolContract, IUniswapV3PoolABI),
@@ -88,22 +90,30 @@ const QuoteManager = (provider: any) => {
 };
 
 function printProfit(buyAmount: number, buyAt: PriceLookup, sellAt: PriceLookup) {
-  console.log(`${COLORS.FgBlue}============ Profit ============`);
+  // console.log(`${COLORS.FgBlue}============ Profit ============`);
+  logger.log(`${COLORS.FgBlue}============ Profit ============`);
+
   let netProfit = buyAmount * buyAt.token0_1 * sellAt.token1_0 - buyAmount;
 
-  console.log(`${COLORS.FgRed}After Swaps: ${netProfit}`);
+  // console.log(`${COLORS.FgRed}After Swaps: ${netProfit}`);
+  logger.log(`${COLORS.FgRed}After Swaps: ${netProfit}`);
 
   // Flashloan premium
   netProfit -= buyAmount * 0.0009;
-  console.log(`${COLORS.FgRed}After FL Premium: ${netProfit}`);
+  // console.log(`${COLORS.FgRed}After FL Premium: ${netProfit}`);
+  logger.log(`${COLORS.FgRed}After FL Premium: ${netProfit}`);
 
   // Padding
   if (parseFloat(process.env.PADDING as string) > 0) {
     netProfit -= netProfit * parseFloat(process.env.PADDING as string);
-    console.log(`After: Padding: ${netProfit}`);
+    // console.log(`After: Padding: ${netProfit}`);
+    logger.log(`After: Padding: ${netProfit}`);
   }
 
-  console.log(
+  // console.log(
+  //   `${COLORS.FgBlue}========================\n${COLORS.FgGreen}Total: ${netProfit}${COLORS.Reset}\n`
+  // );
+  logger.log(
     `${COLORS.FgBlue}========================\n${COLORS.FgGreen}Total: ${netProfit}${COLORS.Reset}\n`
   );
 }
@@ -127,11 +137,20 @@ function printSwapInfo(buyAmount: number, buyAt: PriceLookup, sellAt: PriceLooku
   // xToken = TokenIn for BUY
   // yToken = TokenOut for BUY
   // ========================
-  console.log(`${COLORS.FgBlue}============ Swaps ============`);
-  console.log(
+  // console.log(`${COLORS.FgBlue}============ Swaps ============`);
+  logger.log(`${COLORS.FgBlue}============ Swaps ============`);
+  // console.log(
+  //   `${COLORS.FgCyan}First Swap:\n - xToken: ${buyAmount} = yToken: ${buyAmount * buyAt.token0_1}`
+  // );
+  logger.log(
     `${COLORS.FgCyan}First Swap:\n - xToken: ${buyAmount} = yToken: ${buyAmount * buyAt.token0_1}`
   );
-  console.log(
+  // console.log(
+  //   `${COLORS.FgCyan}Second Swap:\n - yToken: ${buyAmount * buyAt.token0_1} = xToken: ${
+  //     buyAmount * buyAt.token0_1 * sellAt.token1_0
+  //   }`
+  // );
+  logger.log(
     `${COLORS.FgCyan}Second Swap:\n - yToken: ${buyAmount * buyAt.token0_1} = xToken: ${
       buyAmount * buyAt.token0_1 * sellAt.token1_0
     }`
