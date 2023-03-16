@@ -45,6 +45,23 @@ export const PAIRS: { [pair: string]: IPair } = {
       PoolFee: 3000
     }
   },
+  [PairEnum.USDC_DAI]: {
+    // Disabled: true,
+    Name: 'USDC/DAI',
+    Amount: 1000,
+    Uniswap: {
+      // https://info.uniswap.org/#/polygon/pools/0x5645dcb64c059aa11212707fbf4e7f984440a8cf
+      PoolContract: '0x5645dcb64c059aa11212707fbf4e7f984440a8cf',
+      DecimalToken0: TOKENS.USDC.Decimals,
+      DecimalToken1: TOKENS.DAI.Decimals,
+      PoolFee: 3000
+    },
+    Quickswap: {
+      // https://info.quickswap.exchange/#/pair/0xf04adbf75cdfc5ed26eea4bbbb991db002036bdd
+      PoolContract: '0xf04adbf75cdfc5ed26eea4bbbb991db002036bdd',
+      PoolFee: 3000
+    }
+  },
   [PairEnum.wMATIC_USDT]: {
     // Disabled: true,
     Name: 'wMATIC/USDT',

@@ -3,5 +3,6 @@ export enum PairEnum {
   USDC_USDT = 'USDC_USDT',
   wMATIC_USDT = 'wMATIC_USDT',
   BTC_ETH = 'BTC_ETH',
-  USDC_ETH = 'USDC_ETH'
+  USDC_ETH = 'USDC_ETH',
+  USDC_DAI = 'USDC_DAI'
 }

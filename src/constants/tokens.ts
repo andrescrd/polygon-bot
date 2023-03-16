@@ -3,6 +3,10 @@ export const TOKENS = {
     Symbol: 'USDC',
     Decimals: 6
   },
+  DAI: {
+    Symbol: 'DAI',
+    Decimals: 6
+  },
   MATIC: {
     Symbol: 'MATIC',
     Decimals: 18
